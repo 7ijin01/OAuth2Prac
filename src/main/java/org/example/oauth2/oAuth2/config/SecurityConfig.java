@@ -1,6 +1,7 @@
 package org.example.oauth2.oAuth2.config;
 
 import lombok.RequiredArgsConstructor;
+import org.example.oauth2.oAuth2.handler.CustomSuccessHandler;
 import org.example.oauth2.oAuth2.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig
 {
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -32,7 +34,9 @@ public class SecurityConfig
         http
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService)));
+                                .userService(customOAuth2UserService))
+                        .successHandler(customSuccessHandler)
+                );
 
         http
                 .authorizeHttpRequests((auth) -> auth
